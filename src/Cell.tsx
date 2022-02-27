@@ -11,7 +11,7 @@ export type CellProps = {
 export function Cell({ x, y, active, size = 10 }: CellProps): JSX.Element {
     return (
         <div
-            className={`sg-cell ${active ? "food" : ""}`}
+            className={`sg-cell ${active ? "active" : ""}`}
             data-pos-x={x}
             data-pos-y={y}
             style={{

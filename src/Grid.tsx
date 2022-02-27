@@ -6,6 +6,10 @@ type GridProps = {
     rows: number;
     columns: number;
     cellSize: number;
+    active: {
+        x: number,
+        y: number
+    };
 }
 
 type GridState = {
@@ -16,26 +20,29 @@ function isValidDimensions(columns: number, rows: number): boolean {
     return !(columns <= 0 || rows <= 0);
 }
 
-function generateGrid(columns: number, rows: number, cellSize: number): GridState {
+function generateGrid({rows, columns, cellSize, active}: GridProps): GridState {
     const mainGrid: GridState = {};
 
     for (let h = 0; h < rows; h++) {
         for (let w = 0; w < columns; w++) {
-            const pos = `${w},${h}`;
-            mainGrid[pos] = ({ y: h, x: w, active: false, size: cellSize });
+            const x = w;
+            const y = h;
+            const pos = `${x},${y}`;
+            let isActive = active.x === x && active.y === y;
+            mainGrid[pos] = ({ y: y, x: x, active: isActive, size: cellSize });
         }
     }
 
     return mainGrid;
 }
 
-export function Grid({rows, columns, cellSize}: GridProps): JSX.Element {
+export function Grid({rows, columns, cellSize, active}: GridProps): JSX.Element {
 
     if(!isValidDimensions(rows, columns)) {
         throw new Error(`The provided dimensions width: ${columns} and height: ${rows} are not valid`);
     }
 
-    const grid = generateGrid(columns, rows, cellSize);
+    const grid = generateGrid({columns, rows, cellSize, active});
 
     return (
         <div
