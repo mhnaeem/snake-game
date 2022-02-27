@@ -8,16 +8,21 @@ type GridProps = {
     cellSize: number;
 }
 
+type GridState = {
+    [pos: string]: CellProps;
+}
+
 function isValidDimensions(columns: number, rows: number): boolean {
     return !(columns <= 0 || rows <= 0);
 }
 
-function generateGrid(columns: number, rows: number, cellSize: number): Array<CellProps> {
-    const mainGrid: Array<CellProps> = [];
+function generateGrid(columns: number, rows: number, cellSize: number): GridState {
+    const mainGrid: GridState = {};
 
     for (let h = 0; h < rows; h++) {
         for (let w = 0; w < columns; w++) {
-            mainGrid.push({ y: h, x: w, active: false, size: cellSize });
+            const pos = `${w},${h}`;
+            mainGrid[pos] = ({ y: h, x: w, active: false, size: cellSize });
         }
     }
 
@@ -40,7 +45,7 @@ export function Grid({rows, columns, cellSize}: GridProps): JSX.Element {
             }}
         >
             {
-                grid.map(r => <Cell {...r}/>)
+                Object.keys(grid).map(r => <Cell {...grid[r]}/>)
             }
         </div>
     );
