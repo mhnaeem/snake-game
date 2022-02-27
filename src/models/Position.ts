@@ -7,6 +7,14 @@ export class Position {
         this.y_ = y;
     }
 
+    getX(): number {
+        return this.x_;
+    }
+
+    getY(): number {
+        return this.y_;
+    }
+
     toString(): string {
         return `${this.x_},${this.y_}`;
     }
