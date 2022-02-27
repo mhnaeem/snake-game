@@ -1,15 +1,13 @@
 import React from "react";
 import {CellProps, Cell} from "./Cell";
 import "./styles/Grid.less";
+import {Position} from "./models/Position";
 
 type GridProps = {
     rows: number;
     columns: number;
     cellSize: number;
-    active: Array<{
-        x: number,
-        y: number
-    }>;
+    active: Array<Position>;
 }
 
 type GridState = {
@@ -22,17 +20,12 @@ function isValidDimensions(columns: number, rows: number): boolean {
 
 function generateGrid({rows, columns, cellSize, active}: GridProps): GridState {
     const mainGrid: GridState = {};
-    const allActive: { [pos: string]: boolean } = active.reduce((a, v) => {
-        const key = `${v.x},${v.y}`;
-        return {...a, [key]: v}
-    }, {});
+    const allActive: { [pos: string]: boolean } = active.reduce((a, v) => ({...a, [v.toString()]: v}), {});
 
     for (let h = 0; h < rows; h++) {
         for (let w = 0; w < columns; w++) {
-            const x = w;
-            const y = h;
-            const pos = `${x},${y}`;
-            mainGrid[pos] = ({ y: y, x: x, active: !!allActive[pos], size: cellSize });
+            const pos = new Position(w, h);
+            mainGrid[pos.toString()] = ({ pos, active: !!allActive[pos.toString()], size: cellSize });
         }
     }
 

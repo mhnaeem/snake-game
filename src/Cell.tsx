@@ -1,19 +1,18 @@
 import React from "react";
+import {Position} from "./models/Position";
 import "./styles/Cell.less";
 
 export type CellProps = {
-    x: number;
-    y: number;
+    pos: Position;
     active: boolean;
     size: number;
 };
 
-export function Cell({ x, y, active, size = 10 }: CellProps): JSX.Element {
+export function Cell({ pos, active, size = 10 }: CellProps): JSX.Element {
     return (
         <div
             className={`sg-cell ${active ? "active" : ""}`}
-            data-pos-x={x}
-            data-pos-y={y}
+            data-pos={pos.toString()}
             style={{
                 width: size,
                 height: size
