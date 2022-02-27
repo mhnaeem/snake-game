@@ -1,6 +1,6 @@
 import React from "react";
-import {Position} from "./models/Position";
-import "./styles/Cell.less";
+import {Position} from "../models/Position";
+import "../styles/Cell.less";
 
 export type CellProps = {
     pos: Position;

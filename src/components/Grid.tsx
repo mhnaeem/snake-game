@@ -1,7 +1,7 @@
 import React from "react";
 import {CellProps, Cell} from "./Cell";
-import "./styles/Grid.less";
-import {Position} from "./models/Position";
+import "../styles/Grid.less";
+import {Position} from "../models/Position";
 
 type GridProps = {
     rows: number;

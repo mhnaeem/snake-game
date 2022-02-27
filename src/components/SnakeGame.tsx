@@ -1,6 +1,6 @@
 import React from "react";
 import {Grid} from "./Grid";
-import {getListOfRandomPositions} from "./utils";
+import {getListOfRandomPositions} from "../utils";
 
 export function SnakeGame(): JSX.Element {
 
