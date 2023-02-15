@@ -12,13 +12,18 @@ export class GameState {
     constructor(snake?: Snake, foodPositions?: Position[]) {
         this.rows_ = 17;
         this.columns_ = 35;
-        this.snake_ = snake ?? this.makeSnake();
-        this.foodPositions_ = foodPositions ?? getListOfRandomPositions(this.rows_, this.columns_, 15);
+        this.snake_ = snake ?? this.initSnake();
+        this.foodPositions_ = foodPositions ?? this.initRandomFoodPositions();
     }
 
-    private makeSnake() {
+    private initSnake() {
         const snakeBody = [new Position(2, 0), new Position(1, 0), new Position(0, 0)];
         return new Snake(snakeBody, new Position(this.columns_, this.rows_));
+    }
+
+    private initRandomFoodPositions() {
+        return getListOfRandomPositions(this.rows_, this.columns_, 15)
+            .filter(pos => !this.snake_.getSnakeBody().find(p => p.equal(pos)))
     }
 
     getFoodPositions() {
