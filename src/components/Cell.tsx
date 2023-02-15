@@ -6,12 +6,13 @@ export type CellProps = {
     pos: Position;
     active: boolean;
     size: number;
+    extraClass?: string;
 };
 
-export function Cell({ pos, active, size = 10 }: CellProps): JSX.Element {
+export function Cell({ pos, active, size = 10, extraClass }: CellProps): JSX.Element {
     return (
         <div
-            className={`sg-cell ${active ? "active" : ""}`}
+            className={`sg-cell ${active ? "active" : ""} ${extraClass}`}
             data-pos={pos.toString()}
             style={{
                 width: size,
