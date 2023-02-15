@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Grid} from "./Grid";
 import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
@@ -43,30 +43,35 @@ export function SnakeGame(): JSX.Element {
         setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos), gameState.getFoodPositions()));
     }, 500);
 
-    window.onkeydown = (e: KeyboardEvent) => {
-        const prevent = () => {
-            e.stopPropagation();
-            e.preventDefault();
+    useEffect(() => {
+        window.onkeydown = (e: KeyboardEvent) => {
+            const prevent = () => {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            if(timer !== null) clearTimeout(timer);
+            if (e.key == 'ArrowUp') {
+                prevent();
+                if (moveDirection === MoveDirection.DOWN) return;
+                setMoveDirection(MoveDirection.UP);
+            } else if (e.key == 'ArrowDown') {
+                prevent();
+                if (moveDirection === MoveDirection.UP) return;
+                setMoveDirection(MoveDirection.DOWN);
+            } else if (e.key == 'ArrowLeft') {
+                prevent();
+                if (moveDirection === MoveDirection.RIGHT) return;
+                setMoveDirection(MoveDirection.LEFT);
+            } else if (e.key == 'ArrowRight') {
+                prevent();
+                if (moveDirection === MoveDirection.LEFT) return;
+                setMoveDirection(MoveDirection.RIGHT);
+            }
+        };
+        return () => {
+            window.onkeydown = null;
         }
-        if(timer !== null) clearTimeout(timer);
-        if (e.key == 'ArrowUp') {
-            prevent();
-            if (moveDirection === MoveDirection.DOWN) return;
-            setMoveDirection(MoveDirection.UP);
-        } else if (e.key == 'ArrowDown') {
-            prevent();
-            if (moveDirection === MoveDirection.UP) return;
-            setMoveDirection(MoveDirection.DOWN);
-        } else if (e.key == 'ArrowLeft') {
-            prevent();
-            if (moveDirection === MoveDirection.RIGHT) return;
-            setMoveDirection(MoveDirection.LEFT);
-        } else if (e.key == 'ArrowRight') {
-            prevent();
-            if (moveDirection === MoveDirection.LEFT) return;
-            setMoveDirection(MoveDirection.RIGHT);
-        }
-    };
+    });
 
     return (
         <div>
