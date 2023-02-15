@@ -42,11 +42,13 @@ export function SnakeGame(): JSX.Element {
         }
 
         let foodCell = false;
-        if(gameState.getFoodPositions().find(pos => pos.equal(newPos))){
+        let updatedFoodPositions = gameState.getFoodPositions();
+        if(updatedFoodPositions.find(pos => pos.equal(newPos))){
             foodCell = true;
+            updatedFoodPositions = updatedFoodPositions.filter(pos => !pos.equal(newPos));
         }
 
-        setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), gameState.getFoodPositions()));
+        setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), updatedFoodPositions));
     }, 500);
 
     useEffect(() => {
