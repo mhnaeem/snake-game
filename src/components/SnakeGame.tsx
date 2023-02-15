@@ -11,13 +11,15 @@ enum MoveDirection {
     RIGHT
 }
 
+let timer: number;
+
 export function SnakeGame(): JSX.Element {
 
     const [gameState, setGameState] = useState<GameState>(new GameState());
     const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.DOWN);
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
-    setTimeout(() => {
+    timer = setTimeout(() => {
         let newPos;
         const snakeHead = gameState.getSnake().getHeadPosition();
         switch (moveDirection) {
@@ -39,14 +41,14 @@ export function SnakeGame(): JSX.Element {
             throw new GameOverError();
         }
         setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos), gameState.getFoodPositions()));
-    }, 750)
-
+    }, 500);
 
     window.onkeydown = (e: KeyboardEvent) => {
         const prevent = () => {
             e.stopPropagation();
             e.preventDefault();
         }
+        if(timer !== null) clearTimeout(timer);
         if (e.key == 'ArrowUp') {
             prevent();
             if (moveDirection === MoveDirection.DOWN) return;
