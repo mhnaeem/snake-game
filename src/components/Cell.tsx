@@ -18,6 +18,7 @@ export function Cell({ pos, size = 10, extraClass }: CellProps): JSX.Element {
                 height: size
             }}
         >
+            { extraClass?.includes("snake-head") ? <div className={"snake-eye"}></div> : null}
         </div>
     );
 }

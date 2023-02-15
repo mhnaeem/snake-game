@@ -32,6 +32,10 @@ function generateGrid({rows, columns, cellSize, foodPositions, snake}: GridProps
             let extraClass = "";
             if(snakePositions.includes(pos.toString())) {
                 extraClass = "snake-cell";
+
+                if(snake.getHeadPosition().equal(pos)) {
+                    extraClass += " snake-head";
+                }
             }
             else if(allActive[pos.toString()]) {
                 extraClass = "apple-cell"

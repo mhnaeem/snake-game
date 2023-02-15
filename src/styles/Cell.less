@@ -9,4 +9,20 @@
   &.snake-cell {
     background-color: yellow;
   }
+
+  &.snake-head {
+    display: flex;
+
+    .snake-eye {
+      border: 7px solid black;
+      border-radius: 50%;
+      width: 10px;
+      height: 10px;
+      background: white;
+      margin: auto;
+      position: relative;
+      left: -5px;
+      top: -5px;
+    }
+  }
 }
