@@ -4,15 +4,14 @@ import "../styles/Cell.less";
 
 export type CellProps = {
     pos: Position;
-    active: boolean;
     size: number;
     extraClass?: string;
 };
 
-export function Cell({ pos, active, size = 10, extraClass }: CellProps): JSX.Element {
+export function Cell({ pos, size = 10, extraClass }: CellProps): JSX.Element {
     return (
         <div
-            className={`sg-cell ${active ? "active" : ""} ${extraClass}`}
+            className={`sg-cell ${extraClass}`}
             data-pos={pos.toString()}
             style={{
                 width: size,

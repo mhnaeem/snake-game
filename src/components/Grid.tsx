@@ -28,11 +28,19 @@ function generateGrid({rows, columns, cellSize, foodPositions, snake}: GridProps
     for (let h = 0; h < rows; h++) {
         for (let w = 0; w < columns; w++) {
             const pos = new Position(w, h);
+
+            let extraClass = "";
+            if(snakePositions.includes(pos.toString())) {
+                extraClass = "snake-cell";
+            }
+            else if(allActive[pos.toString()]) {
+                extraClass = "apple-cell"
+            }
+
             mainGrid[pos.toString()] = ({
                 pos,
-                active: !!allActive[pos.toString()] && !snakePositions.includes(pos.toString()),
-                size: cellSize,
-                extraClass: snakePositions.includes(pos.toString()) ? "snake-cell" : ""
+                extraClass,
+                size: cellSize
             });
         }
     }
