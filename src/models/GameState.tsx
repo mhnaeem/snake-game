@@ -1,6 +1,6 @@
 import {Snake} from "./Snake";
 import {Position} from "./Position";
-import {getListOfRandomPositions} from "../utils";
+import {getListOfRandomPositions, getRandomPosition, positionOnList} from "../utils";
 
 export class GameState {
 
@@ -16,6 +16,17 @@ export class GameState {
         this.foodPositions_ = foodPositions ?? this.initRandomFoodPositions();
     }
 
+    addNewFoodPosition() {
+        while (true) {
+            const newFoodPosition = getRandomPosition(this.rows_, this.columns_);
+            if(!positionOnList(newFoodPosition, this.snake_.getSnakeBody())) {
+                this.foodPositions_.push(newFoodPosition);
+                break;
+            }
+        }
+        return this.foodPositions_;
+    }
+
     private initSnake() {
         const snakeBody = [new Position(2, 0), new Position(1, 0), new Position(0, 0)];
         return new Snake(snakeBody, new Position(this.columns_, this.rows_));
@@ -23,7 +34,7 @@ export class GameState {
 
     private initRandomFoodPositions() {
         return getListOfRandomPositions(this.rows_, this.columns_, 15)
-            .filter(pos => !this.snake_.getSnakeBody().find(p => p.equal(pos)))
+            .filter(pos => !positionOnList(pos, this.snake_.getSnakeBody()))
     }
 
     getFoodPositions() {

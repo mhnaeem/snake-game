@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Grid} from "./Grid";
 import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
-import {isOutOfBounds} from "../utils";
+import {isOutOfBounds, positionOnList} from "../utils";
 
 enum MoveDirection {
     UP,
@@ -11,7 +11,9 @@ enum MoveDirection {
     RIGHT
 }
 
-let timer: number;
+let updateTimer: number;
+let oldTime: number = Date.now();
+const SPEED: number = 250;
 
 export function SnakeGame(): JSX.Element {
 
@@ -19,7 +21,7 @@ export function SnakeGame(): JSX.Element {
     const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.DOWN);
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
-    timer = setTimeout(() => {
+    updateTimer = setTimeout(() => {
         let newPos: Position;
         const snakeHead = gameState.getSnake().getHeadPosition();
         switch (moveDirection) {
@@ -43,13 +45,20 @@ export function SnakeGame(): JSX.Element {
 
         let foodCell = false;
         let updatedFoodPositions = gameState.getFoodPositions();
-        if(updatedFoodPositions.find(pos => pos.equal(newPos))){
+        if(positionOnList(newPos, updatedFoodPositions)){
             foodCell = true;
             updatedFoodPositions = updatedFoodPositions.filter(pos => !pos.equal(newPos));
         }
 
+        // add new food every X seconds
+        const currentTime = Date.now();
+        if((currentTime - oldTime) >= (SPEED * 10)) {
+            gameState.addNewFoodPosition();
+            oldTime = currentTime;
+        }
+
         setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), updatedFoodPositions));
-    }, 500);
+    }, SPEED);
 
     useEffect(() => {
         window.onkeydown = (e: KeyboardEvent) => {
@@ -57,7 +66,7 @@ export function SnakeGame(): JSX.Element {
                 e.stopPropagation();
                 e.preventDefault();
             }
-            if(timer !== null) clearTimeout(timer);
+            if(updateTimer !== null) clearTimeout(updateTimer);
             if (e.key == 'ArrowUp') {
                 prevent();
                 if (moveDirection === MoveDirection.DOWN) return;
