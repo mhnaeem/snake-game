@@ -3,13 +3,13 @@ import {Position} from "./Position";
 export class Snake {
 
     private headPosition_: Position;
-    private snakeBody_: Array<Position>;
-    private readonly startingPosition_: Position;
+    private readonly snakeBody_: Array<Position>;
+    private readonly bounds_: Position;
 
-    constructor(startingPosition: Position, body: Array<Position>) {
+    constructor(body: Array<Position>, bounds: Position) {
         this.snakeBody_ = body;
-        this.startingPosition_ = startingPosition;
-        this.headPosition_ = startingPosition;
+        this.headPosition_ = body[0];
+        this.bounds_ = bounds;
     }
 
     getSnakeLength(): number {
@@ -20,12 +20,14 @@ export class Snake {
         return this.headPosition_;
     }
 
-    getStartingPosition(): Position {
-        return this.startingPosition_;
-    }
-
     getSnakeBody(): Array<Position> {
         return this.snakeBody_;
     }
 
+    updateHeadPosition(pos: Position): Snake {
+        this.headPosition_ = pos;
+        this.snakeBody_.unshift(this.headPosition_);
+        this.snakeBody_.pop();
+        return this;
+    }
 }

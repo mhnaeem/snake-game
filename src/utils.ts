@@ -19,3 +19,7 @@ export function getListOfRandomPositions(rows: number, columns: number, quantity
     }
     return positions;
 }
+
+export function isOutOfBounds(pos: Position, bounds: Position): boolean {
+    return pos.getY() > bounds.getY() || pos.getX() > bounds.getX() || pos.getY() < 0 || pos.getX() < 0;
+}

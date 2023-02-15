@@ -1,25 +1,80 @@
-import React from "react";
+import React, {useState} from "react";
 import {Grid} from "./Grid";
-import {getListOfRandomPositions} from "../utils";
+import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
-import {Snake} from "../models/Snake";
+import {isOutOfBounds} from "../utils";
+
+enum MoveDirection {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
 
 export function SnakeGame(): JSX.Element {
 
-    const rows = 17;
-    const columns = 35;
-    const randomPositionsForFood = getListOfRandomPositions(rows, columns, 15);
-    const snakeBody = [new Position(0, 0), new Position(0, 1)];
+    const [gameState, setGameState] = useState<GameState>(new GameState());
+    const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.DOWN);
+    const bounds = new Position(gameState.getColumns(), gameState.getRows());
+
+    setTimeout(() => {
+        let newPos;
+        const snakeHead = gameState.getSnake().getHeadPosition();
+        switch (moveDirection) {
+            case MoveDirection.DOWN:
+                newPos = new Position(snakeHead.getX(), snakeHead.getY() + 1);
+                break;
+            case MoveDirection.RIGHT:
+                newPos = new Position(snakeHead.getX() + 1, snakeHead.getY());
+                break;
+            case MoveDirection.LEFT:
+                newPos = new Position(snakeHead.getX() - 1, snakeHead.getY());
+                break;
+            case MoveDirection.UP:
+                newPos = new Position(snakeHead.getX(), snakeHead.getY() - 1);
+                break;
+        }
+
+        if(isOutOfBounds(newPos, bounds)) {
+            throw new GameOverError();
+        }
+        setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos), gameState.getFoodPositions()));
+    }, 750)
+
+
+    window.onkeydown = (e: KeyboardEvent) => {
+        const prevent = () => {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        if (e.key == 'ArrowUp') {
+            prevent();
+            if (moveDirection === MoveDirection.DOWN) return;
+            setMoveDirection(MoveDirection.UP);
+        } else if (e.key == 'ArrowDown') {
+            prevent();
+            if (moveDirection === MoveDirection.UP) return;
+            setMoveDirection(MoveDirection.DOWN);
+        } else if (e.key == 'ArrowLeft') {
+            prevent();
+            if (moveDirection === MoveDirection.RIGHT) return;
+            setMoveDirection(MoveDirection.LEFT);
+        } else if (e.key == 'ArrowRight') {
+            prevent();
+            if (moveDirection === MoveDirection.LEFT) return;
+            setMoveDirection(MoveDirection.RIGHT);
+        }
+    };
 
     return (
         <div>
             <h1>Snake Game by Hammad</h1>
             <Grid
-                rows={rows}
-                columns={columns}
+                rows={gameState.getRows()}
+                columns={gameState.getColumns()}
                 cellSize={50}
-                foodPositions={randomPositionsForFood}
-                snake={new Snake(new Position(0, 0), snakeBody)}
+                foodPositions={gameState.getFoodPositions()}
+                snake={gameState.getSnake()}
             />
         </div>
     )
