@@ -19,7 +19,7 @@ export class Position {
         return `${this.x_},${this.y_}`;
     }
 
-    static fromString(pos: string) {
+    static fromString(pos: string): Position {
         try {
             const splitUp = pos.split(",").map(parseInt);
             return new Position(splitUp[0], splitUp[1]);
@@ -27,5 +27,9 @@ export class Position {
         catch (e) {
             throw new Error("Provided position string is not in the valid 'x,y' format");
         }
+    }
+
+    equal(pos: Position): boolean {
+        return pos.toString() === this.toString();
     }
 }
