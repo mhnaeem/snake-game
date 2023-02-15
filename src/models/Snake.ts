@@ -24,10 +24,10 @@ export class Snake {
         return this.snakeBody_;
     }
 
-    updateHeadPosition(pos: Position): Snake {
+    updateHeadPosition(pos: Position, removeLastCell: boolean): Snake {
         this.headPosition_ = pos;
         this.snakeBody_.unshift(this.headPosition_);
-        this.snakeBody_.pop();
+        if(removeLastCell) this.snakeBody_.pop();
         return this;
     }
 }

@@ -20,7 +20,7 @@ export function SnakeGame(): JSX.Element {
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
     timer = setTimeout(() => {
-        let newPos;
+        let newPos: Position;
         const snakeHead = gameState.getSnake().getHeadPosition();
         switch (moveDirection) {
             case MoveDirection.DOWN:
@@ -40,7 +40,13 @@ export function SnakeGame(): JSX.Element {
         if(isOutOfBounds(newPos, bounds)) {
             throw new GameOverError();
         }
-        setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos), gameState.getFoodPositions()));
+
+        let foodCell = false;
+        if(gameState.getFoodPositions().find(pos => pos.equal(newPos))){
+            foodCell = true;
+        }
+
+        setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), gameState.getFoodPositions()));
     }, 500);
 
     useEffect(() => {
