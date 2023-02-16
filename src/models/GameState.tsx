@@ -9,13 +9,15 @@ export class GameState {
     private readonly snake_: Snake;
     private readonly foodPositions_: Position[];
     private readonly allPositionKeys_: string[];
+    private readonly gameOver_: boolean;
 
-    constructor(snake?: Snake, foodPositions?: Position[]) {
+    constructor(snake?: Snake, foodPositions?: Position[], gameOver?: boolean) {
         this.rows_ = 17;
         this.columns_ = 35;
         this.snake_ = snake ?? this.initSnake();
         this.foodPositions_ = foodPositions ?? this.initRandomFoodPositions();
         this.allPositionKeys_ = this.initPositionKeys_();
+        this.gameOver_ = !!gameOver;
     }
 
     initPositionKeys_() {
@@ -67,4 +69,9 @@ export class GameState {
     getSnake() {
         return this.snake_;
     }
+
+    isGameOver() {
+        return this.gameOver_;
+    }
+
 }

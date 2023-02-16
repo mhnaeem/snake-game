@@ -3,6 +3,7 @@ import {Grid} from "./Grid";
 import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
 import {isOutOfBounds, positionOnList} from "../utils";
+import {GameOverError} from "./GameOverError";
 
 enum MoveDirection {
     UP,
@@ -22,6 +23,9 @@ export function SnakeGame(): JSX.Element {
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
     updateTimer = setTimeout(() => {
+
+        if(gameState.isGameOver()) return;
+
         let newPos: Position;
         const snakeHead = gameState.getSnake().getHeadPosition();
         switch (moveDirection) {
@@ -40,7 +44,8 @@ export function SnakeGame(): JSX.Element {
         }
 
         if(isOutOfBounds(newPos, bounds)) {
-            throw new GameOverError();
+            setGameState(new GameState(gameState.getSnake(), gameState.getFoodPositions(), true));
+            return;
         }
 
         let foodCell = false;
@@ -59,6 +64,10 @@ export function SnakeGame(): JSX.Element {
 
         setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), updatedFoodPositions));
     }, SPEED);
+
+    if(gameState.isGameOver()) {
+        clearTimeout(updateTimer);
+    }
 
     useEffect(() => {
         window.onkeydown = (e: KeyboardEvent) => {
@@ -89,6 +98,11 @@ export function SnakeGame(): JSX.Element {
             window.onkeydown = null;
         }
     });
+
+
+    if(gameState.isGameOver()) {
+        return <GameOverError/>;
+    }
 
     return (
         <div>

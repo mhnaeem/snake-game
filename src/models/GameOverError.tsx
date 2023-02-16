@@ -1,3 +1,0 @@
-class GameOverError extends Error {
-
-}
