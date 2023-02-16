@@ -1,6 +1,7 @@
 import {Snake} from "./Snake";
 import {Position} from "./Position";
 import {getListOfRandomPositions, positionOnList} from "../utils";
+import {GameOverException} from "../components/GameOverError";
 
 export class GameState {
 
@@ -38,6 +39,10 @@ export class GameState {
         const filteredEmptyPositions = this.allPositionKeys_
             .filter(pos => !positionOnList(Position.fromString(pos), this.snake_.getSnakeBody()))
             .filter(pos => !positionOnList(Position.fromString(pos), this.foodPositions_));
+
+        if (filteredEmptyPositions.length === 0) {
+            throw new GameOverException();
+        }
 
         const newFoodPosition = filteredEmptyPositions[Math.floor(Math.random()*filteredEmptyPositions.length)];
         this.foodPositions_.push(Position.fromString(newFoodPosition));

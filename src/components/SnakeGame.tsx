@@ -3,9 +3,9 @@ import {Grid} from "./Grid";
 import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
 import {isOutOfBounds, positionOnList} from "../utils";
-import {GameOverError} from "./GameOverError";
+import {GameOverError, GameOverException} from "./GameOverError";
 import "../styles/SnakeGame.less"
-import Slider from "../../node_modules/rc-slider/lib/Slider";
+import Slider from "rc-slider/lib/Slider";
 import "rc-slider/assets/index.css";
 
 enum MoveDirection {
@@ -22,7 +22,7 @@ export function SnakeGame(): JSX.Element {
 
     const [gameState, setGameState] = useState<GameState>(new GameState());
     const [speed, setSpeed] = useState<number>(250);
-    const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.DOWN);
+    const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.RIGHT);
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
     updateTimer = setTimeout(() => {
@@ -61,7 +61,16 @@ export function SnakeGame(): JSX.Element {
         // add new food every X seconds
         const currentTime = Date.now();
         if(((currentTime - oldTime) >= (speed * 10)) || updatedFoodPositions.length <= 2) {
-            updatedFoodPositions = gameState.addNewFoodPosition();
+            try {
+                updatedFoodPositions = gameState.addNewFoodPosition();
+            }
+            catch (e) {
+                if(e instanceof GameOverException) {
+                    setGameState(new GameState(gameState.getSnake(), gameState.getFoodPositions(), true));
+                    return;
+                }
+                throw e;
+            }
             oldTime = currentTime;
         }
 
@@ -137,7 +146,12 @@ export function SnakeGame(): JSX.Element {
             </div>
             {
                 gameState.isGameOver() ?
-                    <GameOverError/>
+                    <GameOverError
+                        onCloseCallback={() => {
+                            setMoveDirection(MoveDirection.RIGHT);
+                            setGameState(new GameState());
+                        }}
+                    />
                     :
                     null
             }
