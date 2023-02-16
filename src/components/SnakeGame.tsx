@@ -43,7 +43,7 @@ export function SnakeGame(): JSX.Element {
                 break;
         }
 
-        if(isOutOfBounds(newPos, bounds)) {
+        if(isOutOfBounds(newPos, bounds) || positionOnList(newPos, gameState.getSnake().getSnakeBody())) {
             setGameState(new GameState(gameState.getSnake(), gameState.getFoodPositions(), true));
             return;
         }
