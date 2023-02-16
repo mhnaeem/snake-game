@@ -147,6 +147,7 @@ export function SnakeGame(): JSX.Element {
             {
                 gameState.isGameOver() ?
                     <GameOverError
+                        gameState={gameState}
                         onCloseCallback={() => {
                             setMoveDirection(MoveDirection.RIGHT);
                             setGameState(new GameState());
