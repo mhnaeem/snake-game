@@ -4,6 +4,9 @@ import {GameState} from "../models/GameState";
 import {Position} from "../models/Position";
 import {isOutOfBounds, positionOnList} from "../utils";
 import {GameOverError} from "./GameOverError";
+import "../styles/SnakeGame.less"
+import Slider from "../../node_modules/rc-slider/lib/Slider";
+import "rc-slider/assets/index.css";
 
 enum MoveDirection {
     UP,
@@ -14,11 +17,11 @@ enum MoveDirection {
 
 let updateTimer: number;
 let oldTime: number = Date.now();
-const SPEED: number = 250;
 
 export function SnakeGame(): JSX.Element {
 
     const [gameState, setGameState] = useState<GameState>(new GameState());
+    const [speed, setSpeed] = useState<number>(250);
     const [moveDirection, setMoveDirection] = useState<MoveDirection>(MoveDirection.DOWN);
     const bounds = new Position(gameState.getColumns(), gameState.getRows());
 
@@ -57,16 +60,20 @@ export function SnakeGame(): JSX.Element {
 
         // add new food every X seconds
         const currentTime = Date.now();
-        if(((currentTime - oldTime) >= (SPEED * 10)) || updatedFoodPositions.length <= 2) {
+        if(((currentTime - oldTime) >= (speed * 10)) || updatedFoodPositions.length <= 2) {
             updatedFoodPositions = gameState.addNewFoodPosition();
             oldTime = currentTime;
         }
 
         setGameState(new GameState(gameState.getSnake().updateHeadPosition(newPos, !foodCell), updatedFoodPositions));
-    }, SPEED);
+    }, speed);
+
+    const clearUpdateTimer = () => {
+        if(updateTimer !== null) clearTimeout(updateTimer);
+    }
 
     if(gameState.isGameOver()) {
-        clearTimeout(updateTimer);
+        clearUpdateTimer();
     }
 
     useEffect(() => {
@@ -74,10 +81,6 @@ export function SnakeGame(): JSX.Element {
             const prevent = () => {
                 e.stopPropagation();
                 e.preventDefault();
-            }
-
-            const clearUpdateTimer = () => {
-                if(updateTimer !== null) clearTimeout(updateTimer);
             }
 
             if (e.key == 'ArrowUp') {
@@ -109,7 +112,29 @@ export function SnakeGame(): JSX.Element {
 
     return (
         <div>
-            <h1>Snake Game by Hammad</h1>
+            <div className={"header"}>
+                <h1 className={"header-title"}>Snake Game by Hammad</h1>
+                <div className={"speed-slider-class"}>
+                    <Slider
+                        marks={{
+                            50: 'Super Fast',
+                            100: 'Fast',
+                            250: 'Normal',
+                            350: 'Slow',
+                            550: 'Super Slow'
+                        }}
+                        min={50}
+                        max={550}
+                        value={speed}
+                        onChange={(e) => {
+                            if (typeof e === "number") {
+                                clearUpdateTimer();
+                                setSpeed(e);
+                            }
+                        }}
+                    />
+                </div>
+            </div>
             {
                 gameState.isGameOver() ?
                     <GameOverError/>
