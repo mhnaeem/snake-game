@@ -75,22 +75,30 @@ export function SnakeGame(): JSX.Element {
                 e.stopPropagation();
                 e.preventDefault();
             }
-            if(updateTimer !== null) clearTimeout(updateTimer);
+
+            const clearUpdateTimer = () => {
+                if(updateTimer !== null) clearTimeout(updateTimer);
+            }
+
             if (e.key == 'ArrowUp') {
                 prevent();
                 if (moveDirection === MoveDirection.DOWN) return;
+                clearUpdateTimer();
                 setMoveDirection(MoveDirection.UP);
             } else if (e.key == 'ArrowDown') {
                 prevent();
                 if (moveDirection === MoveDirection.UP) return;
+                clearUpdateTimer();
                 setMoveDirection(MoveDirection.DOWN);
             } else if (e.key == 'ArrowLeft') {
                 prevent();
                 if (moveDirection === MoveDirection.RIGHT) return;
+                clearUpdateTimer();
                 setMoveDirection(MoveDirection.LEFT);
             } else if (e.key == 'ArrowRight') {
                 prevent();
                 if (moveDirection === MoveDirection.LEFT) return;
+                clearUpdateTimer();
                 setMoveDirection(MoveDirection.RIGHT);
             }
         };
