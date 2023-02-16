@@ -1,6 +1,6 @@
 import {Snake} from "./Snake";
 import {Position} from "./Position";
-import {getListOfRandomPositions, getRandomPosition, positionOnList} from "../utils";
+import {getListOfRandomPositions, positionOnList} from "../utils";
 
 export class GameState {
 
@@ -8,22 +8,37 @@ export class GameState {
     private readonly columns_: number;
     private readonly snake_: Snake;
     private readonly foodPositions_: Position[];
+    private readonly allPositionKeys_: string[];
 
     constructor(snake?: Snake, foodPositions?: Position[]) {
         this.rows_ = 17;
         this.columns_ = 35;
         this.snake_ = snake ?? this.initSnake();
         this.foodPositions_ = foodPositions ?? this.initRandomFoodPositions();
+        this.allPositionKeys_ = this.initPositionKeys_();
+    }
+
+    initPositionKeys_() {
+        const grid = [];
+
+        for (let h = 0; h < this.rows_; h++) {
+            for (let w = 0; w < this.columns_; w++) {
+                const pos = new Position(w, h);
+                grid.push(pos.toString());
+            }
+        }
+
+        return grid;
     }
 
     addNewFoodPosition() {
-        while (true) {
-            const newFoodPosition = getRandomPosition(this.rows_, this.columns_);
-            if(!positionOnList(newFoodPosition, this.snake_.getSnakeBody())) {
-                this.foodPositions_.push(newFoodPosition);
-                break;
-            }
-        }
+
+        const filteredEmptyPositions = this.allPositionKeys_
+            .filter(pos => !positionOnList(Position.fromString(pos), this.snake_.getSnakeBody()))
+            .filter(pos => !positionOnList(Position.fromString(pos), this.foodPositions_));
+
+        const newFoodPosition = filteredEmptyPositions[Math.floor(Math.random()*filteredEmptyPositions.length)];
+        this.foodPositions_.push(Position.fromString(newFoodPosition));
         return this.foodPositions_;
     }
 
