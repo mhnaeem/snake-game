@@ -12,7 +12,7 @@ export class GameState {
     private readonly gameOver_: boolean;
 
     constructor(snake?: Snake, foodPositions?: Position[], gameOver?: boolean) {
-        this.rows_ = 17;
+        this.rows_ = 15;
         this.columns_ = 35;
         this.snake_ = snake ?? this.initSnake();
         this.foodPositions_ = foodPositions ?? this.initRandomFoodPositions();

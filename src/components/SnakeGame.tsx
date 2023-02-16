@@ -107,14 +107,15 @@ export function SnakeGame(): JSX.Element {
         }
     });
 
-
-    if(gameState.isGameOver()) {
-        return <GameOverError/>;
-    }
-
     return (
         <div>
             <h1>Snake Game by Hammad</h1>
+            {
+                gameState.isGameOver() ?
+                    <GameOverError/>
+                    :
+                    null
+            }
             <Grid
                 rows={gameState.getRows()}
                 columns={gameState.getColumns()}
