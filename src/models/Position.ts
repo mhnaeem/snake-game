@@ -21,7 +21,7 @@ export class Position {
 
     static fromString(pos: string): Position {
         try {
-            const splitUp = pos.split(",").map(parseInt);
+            const splitUp = pos.split(",").map(p => parseInt(p));
             return new Position(splitUp[0], splitUp[1]);
         }
         catch (e) {

@@ -57,8 +57,8 @@ export function SnakeGame(): JSX.Element {
 
         // add new food every X seconds
         const currentTime = Date.now();
-        if((currentTime - oldTime) >= (SPEED * 10)) {
-            gameState.addNewFoodPosition();
+        if(((currentTime - oldTime) >= (SPEED * 10)) || updatedFoodPositions.length <= 2) {
+            updatedFoodPositions = gameState.addNewFoodPosition();
             oldTime = currentTime;
         }
 
